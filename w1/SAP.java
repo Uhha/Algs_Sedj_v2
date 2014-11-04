@@ -1,5 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -17,17 +19,38 @@ public class SAP {
 	public int length(int v, int w) {
 		if(v == w){return 0;}
 		int length = 1;
-		while (digraph.adj(v) != null || digraph.adj(w) != null){
-			Set set = (Set) digraph.adj(v);
-			Set set2 = (Set) digraph.adj(w);
-			if (set.contains(w) || set2.contains(v)){
-				return length;
+		Iterable<Integer> part1 = digraph.adj(v);
+		Iterable<Integer> part2 = digraph.adj(w);
+		ArrayList<Integer> qu = new ArrayList<Integer>();
+		for (Integer integer : part1) {
+			qu.add(integer);
+		}
+		for (Integer integer : part2) {
+			qu.add(integer);
+		}
+		//System.out.println(qu.toString());
+		while (!qu.isEmpty()){
+			for (int i = 0; i < qu.size(); i++) {
+				for (int j = i+1; j < qu.size(); j++) {
+					if(qu.get(i) == qu.get(j)){
+						System.out.println("here");
+						return length;
+					}
+				}
 			}
-			v = 
+			ArrayList<Integer> qu2 = new ArrayList<Integer>();
+			for (int i = 0; i < qu.size(); i++) {
+				Iterable<Integer> ll = digraph.adj(qu.get(i));
+				for (Integer integer: ll) {
+					qu2.add(integer);
+				}
+				
+			}
+			qu.addAll(qu2);
 			length++;
 		}
 		
-		return w;
+		return -1;
 
 	}
 
@@ -58,18 +81,15 @@ public class SAP {
 		In in = new In(a);
 		Digraph G = new Digraph(in);
 		SAP sap = new SAP(G);
-//		System.out.println(G.toString());
-//		while (!StdIn.isEmpty()) {
-//			int v = StdIn.readInt();
-//			int w = StdIn.readInt();
-//			int length = sap.length(v, w);
-//			int ancestor = sap.ancestor(v, w);
-//			StdOut.printf("length = %d, ancestor = %d\n", length, ancestor);
-//		}
-		Iterable<Integer> it = sap.digraph.adj(5);
-		for (Integer integer : it) {
-			System.out.println(integer);
+		System.out.println(G.toString());
+		while (!StdIn.isEmpty()) {
+			int v = StdIn.readInt();
+			int w = StdIn.readInt();
+			int length = sap.length(v, w);
+			int ancestor = sap.ancestor(v, w);
+			StdOut.printf("length = %d, ancestor = %d\n", length, ancestor);
 		}
+		
 		
 	}
 }
