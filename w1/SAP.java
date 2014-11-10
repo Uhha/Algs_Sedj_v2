@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 
 
+
 public class SAP {
 
 	private Digraph digraph;
@@ -40,28 +41,48 @@ public class SAP {
 		if(v > digraph.V() || w > digraph.V()){throw new IndexOutOfBoundsException();}
 		BreadthFirstDirectedPaths bfsw = new BreadthFirstDirectedPaths(digraph, w);
 		BreadthFirstDirectedPaths bfsv = new BreadthFirstDirectedPaths(digraph, v);
-		ArrayList<Integer> lookup = new ArrayList<>();
-		lookup.add(v);
-		while (lookup.size() > 0){
-			ArrayList<Integer> lookupRemover = new ArrayList<>();
-			ArrayList<Integer> lookupAdder = new ArrayList<>();
-			for (Integer integer : lookup) {
-				for (Integer vertex : digraph.adj(integer)) {
-					lookupAdder.add(vertex);
+		ArrayList<Integer> lookupV = new ArrayList<>();
+		ArrayList<Integer> lookupW = new ArrayList<>();
+		lookupV.add(w);
+		lookupW.add(v);
+		int ret_length = Integer.MAX_VALUE;
+		int ret = -1;
+		int specialcount = 0;
+		while(lookupV.size() > 0 && lookupW.size() > 0){
+			
+			ArrayList<Integer> lookupV_new = new ArrayList<>();
+			ArrayList<Integer> lookupW_new = new ArrayList<>();
+			for (Integer integer : lookupV) {
+				if(bfsv.hasPathTo(integer)){
+					//return integer;
+					if(bfsv.distTo(integer)+specialcount < ret_length){
+						ret_length = bfsv.distTo(integer)+specialcount;
+						ret = integer;
+					}
 				}
-				if (!bfsw.hasPathTo(integer)){
-					lookupRemover.add(integer);
-				} else {
-					return integer;
-				}
-				if (bfsv.hasPathTo(w)){
-					return w;
+				for (Integer newint : digraph.adj(integer)) {
+					lookupV_new.add(newint);
 				}
 			}
-			lookup.addAll(lookupAdder);
-			lookup.removeAll(lookupRemover);
+			for (Integer integer : lookupW) {
+				if(bfsw.hasPathTo(integer)){
+					//return integer;
+					if(bfsw.distTo(integer)+specialcount < ret_length){
+						ret_length = bfsw.distTo(integer) + specialcount;
+						ret = integer;
+					}
+				}
+				for (Integer newint : digraph.adj(integer)) {
+					lookupW_new.add(newint);
+				}
+			}
+			lookupV = lookupV_new;
+			lookupW = lookupW_new;
+			specialcount++;
+		
 		}
-		return -1;
+		
+		return ret;	
 
 	}
 
@@ -100,7 +121,7 @@ public class SAP {
 
 	// do unit testing of this class
 	public static void main(String[] args) {
-		String a  = "w1/wordnet/digraph2.txt";
+		String a  = "w1/wordnet/digraph5.txt";
 		//String a  = "w1/wordnet/digraph-wordnet.txt";
 		In in = new In(a);
 		Digraph G = new Digraph(in);
