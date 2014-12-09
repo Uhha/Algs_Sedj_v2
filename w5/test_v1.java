@@ -31,8 +31,13 @@ public class test_v1 {
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		test_v1 tv = new test_v1();
-		tv.rec(new int[4][4], 1);
+		//test_v1 tv = new test_v1();
+		//tv.rec(new int[4][4], 1);
+		int d = 0;
+		String key = ".BD";
+		char c = key.charAt(d);
+		System.out.println(c);
+		System.out.println(c-65);
 	}
 
 }

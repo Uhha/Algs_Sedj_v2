@@ -1,11 +1,11 @@
 
-public class BoggleSolver
+public class BoggleSolver_TST
 {
 	private TST_mod<Integer> dic;
 	
     // Initializes the data structure using the given array of strings as the dictionary.
     // (You can assume each word in the dictionary contains only the uppercase letters A through Z.)
-    public BoggleSolver(String[] dictionary){
+    public BoggleSolver_TST(String[] dictionary){
     	dic = new TST_mod<Integer>();
     	for (int i = 0; i < dictionary.length; i++) {
 			dic.put(dictionary[i], 1);
@@ -104,7 +104,7 @@ public class BoggleSolver
     {
         In in = new In("dictionary-zingarelli2005.txt");
         String[] dictionary = in.readAllStrings();
-        BoggleSolver solver = new BoggleSolver(dictionary);
+        BoggleSolver_TST solver = new BoggleSolver_TST(dictionary);
         Stopwatch st = new Stopwatch();
         
         for (int i = 0; i < 100; i++) {

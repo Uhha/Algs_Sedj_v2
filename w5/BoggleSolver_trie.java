@@ -1,14 +1,14 @@
 
-public class BoggleSolver
+public class BoggleSolver_trie
 {
-	private TST_mod<Integer> dic;
+	private TrieST_mod dic;
 	
     // Initializes the data structure using the given array of strings as the dictionary.
     // (You can assume each word in the dictionary contains only the uppercase letters A through Z.)
-    public BoggleSolver(String[] dictionary){
-    	dic = new TST_mod<Integer>();
+    public BoggleSolver_trie(String[] dictionary){
+    	dic = new TrieST_mod();
     	for (int i = 0; i < dictionary.length; i++) {
-			dic.put(dictionary[i], 1);
+			dic.put(dictionary[i], true);
 		}
     	
     }
@@ -35,8 +35,8 @@ public class BoggleSolver
     	else {sb.append(board.getLetter(i, j));}
     	if (dic.contains(sb.toString()) && sb.toString().length() > 2) {words.add(sb.toString());}
     	
-    	//if (!prefixCheck(dic.prefixMatch(sb.toString()))){
-    	if (dic.prefixMatch2(sb.toString())){
+    	//if (!prefixCheck(dic.keysWithPrefix(sb.toString()))){
+    	if (dic.keysWithPrefix2(sb.toString())){
     		if(j < board.cols()-1 && !visited[i][j+1]) dfs(i, j+1, cloner(visited), new StringBuffer(sb), board, words);
     		if(j > 0 && !visited[i][j-1]) dfs(i, j-1, cloner(visited), new StringBuffer(sb), board, words);
     		if(i < board.rows()-1 && !visited[i+1][j]) dfs(i+1, j, cloner(visited), new StringBuffer(sb), board, words);
@@ -104,10 +104,10 @@ public class BoggleSolver
     {
         In in = new In("dictionary-zingarelli2005.txt");
         String[] dictionary = in.readAllStrings();
-        BoggleSolver solver = new BoggleSolver(dictionary);
+        BoggleSolver_trie solver = new BoggleSolver_trie(dictionary);
         Stopwatch st = new Stopwatch();
         
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 250; i++) {
         	BoggleBoard board = new BoggleBoard();
             solver.getAllValidWords(board);
 		}
