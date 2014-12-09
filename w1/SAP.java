@@ -9,9 +9,10 @@ public class SAP {
 	
 	// constructor takes a digraph (not necessarily a DAG)
 	public SAP(Digraph G) {
-		DirectedCycle dc = new DirectedCycle(G);
-		if (dc.hasCycle()){throw new IllegalArgumentException();}
-		digraph = G;
+		//DirectedCycle dc = new DirectedCycle(G);
+		//if (dc.hasCycle()){throw new IllegalArgumentException();}
+		digraph = new Digraph(G);
+		
 	}
 
 	// length of shortest ancestral path between v and w; -1 if no such path
@@ -48,7 +49,7 @@ public class SAP {
 		int ret_length = Integer.MAX_VALUE;
 		int ret = -1;
 		int specialcount = 0;
-		while(lookupV.size() > 0 && lookupW.size() > 0){
+		while(lookupV.size() > 0 && lookupW.size() > 0 && specialcount < digraph.V()){
 			
 			ArrayList<Integer> lookupV_new = new ArrayList<>();
 			ArrayList<Integer> lookupW_new = new ArrayList<>();
@@ -121,7 +122,7 @@ public class SAP {
 
 	// do unit testing of this class
 	public static void main(String[] args) {
-		String a  = "w1/wordnet/digraph5.txt";
+		String a  = "w1/wordnet/digraph3.txt";
 		//String a  = "w1/wordnet/digraph-wordnet.txt";
 		In in = new In(a);
 		Digraph G = new Digraph(in);
