@@ -123,7 +123,7 @@ public class BoggleGame extends JFrame {
     private JMenuBar menuBar;
     private JMenu gameMenu;
     private JRadioButtonMenuItem[] difficultySelection; 
-    private BoggleSolver_trie solver;
+    private BoggleSolver solver;
     private JLabel clock;
     private BoardPanel bp;
     private final JTextField entryField;
@@ -411,7 +411,7 @@ public class BoggleGame extends JFrame {
         String[] dictionary = in.readAllStrings();
 
         // create the Boggle solver with the given dictionary
-        solver = new BoggleSolver_trie(dictionary);
+        solver = new BoggleSolver(dictionary);
 
         newGame();
         this.pack();   

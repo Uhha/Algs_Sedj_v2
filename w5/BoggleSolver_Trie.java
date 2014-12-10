@@ -1,12 +1,13 @@
+import java.util.Collections;
 
 
-public class BoggleSolver
+public class BoggleSolver_Trie
 {
 	private Trie_mod<Integer> dic;
 	
     // Initializes the data structure using the given array of strings as the dictionary.
     // (You can assume each word in the dictionary contains only the uppercase letters A through Z.)
-    public BoggleSolver(String[] dictionary){
+    public BoggleSolver_Trie(String[] dictionary){
     	
     	dic = new Trie_mod<Integer>();
     	for (int i = 0; i < dictionary.length; i++) {
@@ -46,7 +47,7 @@ public class BoggleSolver
     	else {sb.append(board.getLetter(i, j));}
     	if (dic.contains(sb.toString()) && sb.toString().length() > 2) {words.add(sb.toString());}
     	
-    	if (dic.keysWithPrefix3(sb.toString())){
+    	if (dic.keysWithPrefix2(sb.toString())){
     		if(j < board.cols()-1 && !checkin(i,j+1, set, adj)) dfs(i, j+1, adj, new StringBuffer(sb), board, words, new SET<Integer>().union(set));
     		if(j > 0 && !checkin(i,j-1, set, adj)) dfs(i, j-1, adj, new StringBuffer(sb), board, words, new SET<Integer>().union(set));
     		if(i < board.rows()-1 && !checkin(i+1,j, set, adj)) dfs(i+1, j, adj, new StringBuffer(sb), board, words, new SET<Integer>().union(set));
@@ -67,6 +68,31 @@ public class BoggleSolver
     }
     
     
+    
+    private boolean[][] cloner(boolean[][] visited){
+		boolean[][] ret = new boolean[visited.length][visited[0].length];
+		for (int i = 0; i < ret.length; i++) {
+			for (int j = 0; j < ret[0].length; j++) {
+				ret[i][j] = visited[i][j];
+			}
+		}
+    	return ret;
+    	
+    }
+    
+    private boolean prefixCheck(Iterable<String> iterable){
+    	int cnt = 0;
+		boolean empty = true;
+		for (String st : iterable) {
+			cnt++;
+			if (cnt > 0){
+				empty = false;
+				break;
+			}
+		}
+		return empty;
+    }
+   
     // Returns the score of the given word if it is in the dictionary, zero otherwise.
     // (You can assume the word contains only the uppercase letters A through Z.)
     public int scoreOf(String word){
@@ -99,7 +125,7 @@ public class BoggleSolver
     {
         In in = new In("dictionary-algs4.txt");
         String[] dictionary = in.readAllStrings();
-        BoggleSolver solver = new BoggleSolver(dictionary);
+        BoggleSolver_Trie solver = new BoggleSolver_Trie(dictionary);
         BoggleBoard board = new BoggleBoard("board4x4.txt");
         int score = 0;
         int cnt = 0;

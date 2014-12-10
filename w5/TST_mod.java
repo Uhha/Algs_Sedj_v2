@@ -69,6 +69,19 @@ public class TST_mod<Value> {
         else if (d < key.length() - 1) return get(x.mid,   key, d+1);
         else                           return x;
     }
+    
+    private Node get2(Node x, String key, int d) {
+        if (key == null) throw new NullPointerException();
+        if (key.length() == 0) throw new IllegalArgumentException("key must have length >= 1");
+        if (x == null) return null;
+        
+        else {return new Node();}
+//        char c = key.charAt(d);
+//        if      (c < x.c)              return x.left;//get(x.left,  key, d);
+//        else if (c > x.c)              return x.right;//get(x.right, key, d);
+//        else if (d < key.length() - 1) return x.mid;//get(x.mid,   key, d+1);
+//        else                           return x;
+    }
 
 
    /**************************************************************
@@ -132,7 +145,7 @@ public class TST_mod<Value> {
     }
     public boolean prefixMatch2(String prefix) {
         //Queue<String> queue = new Queue<String>();
-        Node x = get(root, prefix, 0);
+        Node x = get2(root, prefix, 0);
         if (x == null) return false;
         else {return true;}
         	
