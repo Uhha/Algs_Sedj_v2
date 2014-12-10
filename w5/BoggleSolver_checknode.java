@@ -2,13 +2,13 @@ import java.util.HashSet;
 
 
 
-public class BoggleSolver
+public class BoggleSolver_checknode
 {
 	private Trie_mod<Integer> dic;
 	
     // Initializes the data structure using the given array of strings as the dictionary.
     // (You can assume each word in the dictionary contains only the uppercase letters A through Z.)
-    public BoggleSolver(String[] dictionary){
+    public BoggleSolver_checknode(String[] dictionary){
     	
     	dic = new Trie_mod<Integer>();
     	for (int i = 0; i < dictionary.length; i++) {
@@ -32,13 +32,13 @@ public class BoggleSolver
     	for (int i = 0; i < board.rows(); i++) {
 			for (int j = 0; j < board.cols(); j++) {
 				//boolean[][] visited = new boolean[board.rows()][board.cols()];
-				dfs(i,j,adj, new StringBuffer(), board, words, new HashSet<Integer>());
+				dfs(i,j,adj, new StringBuffer(), board, words, new HashSet<Integer>(), null);
 			}
 		}
     	return words;
 	}
     
-    private void dfs(int i, int j, int[][] adj, StringBuffer sb, BoggleBoard board, SET<String> words, HashSet<Integer> set){
+    private void dfs(int i, int j, int[][] adj, StringBuffer sb, BoggleBoard board, SET<String> words, HashSet<Integer> set, Trie_mod.Node checknode){
     	set.add(adj[i][j]);
     	char ch = board.getLetter(i, j);
     	if("Q".equals(Character.toString(ch))){
@@ -50,17 +50,25 @@ public class BoggleSolver
     	
     	//if (dic.keysWithPrefix4(sb.toString()) > 0){
     	//if (dic.keysWithPrefix2(sb.toString())){
+    	boolean pass = false;
+    	if(checknode == null){
+    		checknode = dic.keysWithPrefix5(sb.toString());
+    	} else {
+    		checknode = dic.keysWithPrefix5_support(checknode, Character.toString(board.getLetter(i, j)));
+    	}
     	
-    	
-    	if (dic.keysWithPrefix2(sb.toString())){
-    		if(j < board.cols()-1 && !set.contains(adj[i][j+1])) dfs(i, j+1, adj, new StringBuffer(sb), board, words, new HashSet<Integer>(set));
-    		if(j > 0 && !set.contains(adj[i][j-1])) dfs(i, j-1, adj, new StringBuffer(sb), board, words, new HashSet<Integer>(set));
-    		if(i < board.rows()-1 && !set.contains(adj[i+1][j])) dfs(i+1, j, adj, new StringBuffer(sb), board, words, new HashSet<Integer>(set));
-    		if(i > 0 && !set.contains(adj[i-1][j])) dfs(i-1, j, adj, new StringBuffer(sb), board, words, new HashSet<Integer>(set));
-    		if(i < board.rows()-1 && j < board.cols()-1 && !set.contains(adj[i+1][j+1])) dfs(i+1, j+1, adj, new StringBuffer(sb), board, words, new HashSet<Integer>(set));
-    		if(i > 0 && j > 0 && !set.contains(adj[i-1][j-1])) dfs(i-1, j-1, adj, new StringBuffer(sb), board, words, new HashSet<Integer>(set));
-    		if(i < board.rows()-1 && j > 0 && !set.contains(adj[i+1][j-1])) dfs(i+1, j-1, adj, new StringBuffer(sb), board, words, new HashSet<Integer>(set));
-    		if(i > 0 && j < board.cols()-1 && !set.contains(adj[i-1][j+1])) dfs(i-1, j+1, adj, new StringBuffer(sb), board, words, new HashSet<Integer>(set));
+    	if(checknode != null){
+    		pass = true;
+    	}
+    	if (pass){
+    		if(j < board.cols()-1 && !set.contains(adj[i][j+1])) dfs(i, j+1, adj, new StringBuffer(sb), board, words, new HashSet<Integer>(set), checknode);
+    		if(j > 0 && !set.contains(adj[i][j-1])) dfs(i, j-1, adj, new StringBuffer(sb), board, words, new HashSet<Integer>(set), checknode);
+    		if(i < board.rows()-1 && !set.contains(adj[i+1][j])) dfs(i+1, j, adj, new StringBuffer(sb), board, words, new HashSet<Integer>(set), checknode);
+    		if(i > 0 && !set.contains(adj[i-1][j])) dfs(i-1, j, adj, new StringBuffer(sb), board, words, new HashSet<Integer>(set), checknode);
+    		if(i < board.rows()-1 && j < board.cols()-1 && !set.contains(adj[i+1][j+1])) dfs(i+1, j+1, adj, new StringBuffer(sb), board, words, new HashSet<Integer>(set), checknode);
+    		if(i > 0 && j > 0 && !set.contains(adj[i-1][j-1])) dfs(i-1, j-1, adj, new StringBuffer(sb), board, words, new HashSet<Integer>(set), checknode);
+    		if(i < board.rows()-1 && j > 0 && !set.contains(adj[i+1][j-1])) dfs(i+1, j-1, adj, new StringBuffer(sb), board, words, new HashSet<Integer>(set), checknode);
+    		if(i > 0 && j < board.cols()-1 && !set.contains(adj[i-1][j+1])) dfs(i-1, j+1, adj, new StringBuffer(sb), board, words, new HashSet<Integer>(set), checknode);
     	}
     }
     
@@ -97,7 +105,7 @@ public class BoggleSolver
     {
         In in = new In("dictionary-algs4.txt");
         String[] dictionary = in.readAllStrings();
-        BoggleSolver solver = new BoggleSolver(dictionary);
+        BoggleSolver_checknode solver = new BoggleSolver_checknode(dictionary);
         BoggleBoard board = new BoggleBoard("board4x4.txt");
         int score = 0;
         int cnt = 0;

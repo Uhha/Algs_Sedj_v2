@@ -6,7 +6,7 @@ public class Trie_mod<Value> {
     private Node prev = root;
     private String prevst = "";
     
-    private static class Node {
+    static class Node {
         private Object val;
         private Node[] next = new Node[R];
     }
@@ -71,9 +71,30 @@ public class Trie_mod<Value> {
         else {return true;}
     }
 
-   
+    public int keysWithPrefix4(String prefix) {
+    	return getint(root, prefix, 0);
+    	
+    }
+    
+    private int getint(Node x, String key, int d) {
+        if (x == null) return -1;
+        if (d == key.length()) return 1;
+        char c = key.charAt(d);
+        return getint(x.next[c-65], key, d+1);
+    }
   
-
+    public Node keysWithPrefix5(String prefix) {
+    	Node x = get(root, prefix, 0);
+    	if (x == null) return null;
+        else {return x;}
+    }
+    public Node keysWithPrefix5_support(Node node, String prefix) {
+    	Node x = get(node, prefix, 0);
+    	if (x == null) return null;
+        else {return x;}
+    }
+    
+    
 
     // test client
     public static void main(String[] args) {
