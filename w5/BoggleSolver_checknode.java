@@ -1,4 +1,4 @@
-import java.util.HashSet;
+
 
 
 
@@ -19,7 +19,8 @@ public class BoggleSolver_checknode
 
     // Returns the set of all valid words in the given Boggle board, as an Iterable.
     public Iterable<String> getAllValidWords(BoggleBoard board){
-    	int cnt = 0;
+    	SET<String> words = new SET<>();
+		int cnt = 0;
     	int[][] adj = new int[board.rows()][board.cols()];
     	for (int i = 0; i < adj.length; i++) {
 			for (int j = 0; j < adj[0].length; j++) {
@@ -27,30 +28,34 @@ public class BoggleSolver_checknode
 				cnt++;
 			}
 		}
-    	
-    	SET<String> words = new SET<>();
-    	for (int i = 0; i < board.rows(); i++) {
-			for (int j = 0; j < board.cols(); j++) {
-				//boolean[][] visited = new boolean[board.rows()][board.cols()];
-				dfs(i,j,adj, new StringBuffer(), board, words, new HashSet<Integer>(), null);
+    	boolean[][] bol = new boolean[board.rows()][board.cols()];
+    	for (int i = 0; i < adj.length; i++) {
+			for (int j = 0; j < adj[0].length; j++) {
+				dfs(i, j, adj, bol, new Stack<Integer>(), board, words, null);
 			}
 		}
     	return words;
 	}
     
-    private void dfs(int i, int j, int[][] adj, StringBuffer sb, BoggleBoard board, SET<String> words, HashSet<Integer> set, Trie_mod.Node checknode){
-    	set.add(adj[i][j]);
-    	char ch = board.getLetter(i, j);
-    	if("Q".equals(Character.toString(ch))){
-    		sb.append(board.getLetter(i, j));
-    		sb.append("U");
-    	}
-    	else {sb.append(board.getLetter(i, j));}
-    	if (dic.contains(sb.toString()) && sb.toString().length() > 2) {words.add(sb.toString());}
-    	
-    	//if (dic.keysWithPrefix4(sb.toString()) > 0){
-    	//if (dic.keysWithPrefix2(sb.toString())){
-    	boolean pass = false;
+    private void dfs(int i, int j, int[][]adj, boolean[][] bol, Stack<Integer> stack, BoggleBoard board, SET<String> words, Trie_mod.Node checknode) {
+		stack.push(adj[i][j]);
+		bol[i][j] = true;
+		StringBuffer sb = new StringBuffer();
+		
+		for (Integer x : stack) {
+			int i0 = x/adj[0].length;
+			int j0 = x-(adj[0].length*i0);
+			char ch = board.getLetter(i0, j0);
+			if ("Q".equals(Character.toString(ch))){
+				sb.append("U");
+				sb.append(ch);
+			} else {
+			sb.append(ch);
+			}
+		}
+		String sbrev = sb.reverse().toString();
+		
+		boolean pass = false;
     	if(checknode == null){
     		checknode = dic.keysWithPrefix5(sb.toString());
     	} else {
@@ -61,18 +66,28 @@ public class BoggleSolver_checknode
     		pass = true;
     	}
     	if (pass){
-    		if(j < board.cols()-1 && !set.contains(adj[i][j+1])) dfs(i, j+1, adj, new StringBuffer(sb), board, words, new HashSet<Integer>(set), checknode);
-    		if(j > 0 && !set.contains(adj[i][j-1])) dfs(i, j-1, adj, new StringBuffer(sb), board, words, new HashSet<Integer>(set), checknode);
-    		if(i < board.rows()-1 && !set.contains(adj[i+1][j])) dfs(i+1, j, adj, new StringBuffer(sb), board, words, new HashSet<Integer>(set), checknode);
-    		if(i > 0 && !set.contains(adj[i-1][j])) dfs(i-1, j, adj, new StringBuffer(sb), board, words, new HashSet<Integer>(set), checknode);
-    		if(i < board.rows()-1 && j < board.cols()-1 && !set.contains(adj[i+1][j+1])) dfs(i+1, j+1, adj, new StringBuffer(sb), board, words, new HashSet<Integer>(set), checknode);
-    		if(i > 0 && j > 0 && !set.contains(adj[i-1][j-1])) dfs(i-1, j-1, adj, new StringBuffer(sb), board, words, new HashSet<Integer>(set), checknode);
-    		if(i < board.rows()-1 && j > 0 && !set.contains(adj[i+1][j-1])) dfs(i+1, j-1, adj, new StringBuffer(sb), board, words, new HashSet<Integer>(set), checknode);
-    		if(i > 0 && j < board.cols()-1 && !set.contains(adj[i-1][j+1])) dfs(i-1, j+1, adj, new StringBuffer(sb), board, words, new HashSet<Integer>(set), checknode);
-    	}
-    }
-    
-    
+			
+		if(j < adj[0].length-1 && !(bol[i][j+1])) {dfs(i, j+1, adj, bol, stack, board, words, checknode);}
+		if(j > 0 && !(bol[i][j-1])) {dfs(i, j-1, adj, bol, stack, board, words, checknode);}
+		if(i < adj.length-1 && !(bol[i+1][j])) {dfs(i+1, j, adj, bol, stack, board, words, checknode);}
+		if(i > 0 && !(bol[i-1][j])) {dfs(i-1, j, adj, bol, stack, board, words, checknode);}
+		if(i < adj.length-1 && j < adj[0].length-1 && !(bol[i+1][j+1])) {dfs(i+1, j+1, adj, bol, stack, board, words, checknode);}
+		if(i > 0 && j > 0 && !(bol[i-1][j-1])) {dfs(i-1, j-1, adj, bol, stack, board, words, checknode);}
+		if(i < adj.length-1 && j > 0 && !(bol[i+1][j-1])) {dfs(i+1, j-1, adj, bol, stack, board, words, checknode);}
+		if(i > 0 && j < adj[0].length-1 && !(bol[i-1][j+1])) {dfs(i-1, j+1, adj, bol, stack, board, words, checknode);}
+		
+		}
+		
+		if (dic.contains(sbrev) && sbrev.length() > 2) {words.add(sbrev);}
+		
+		int x = stack.pop();
+		int i1 = x/adj[0].length;
+		int j1 = x-(adj[0].length*i1);
+		bol[i1][j1] = false;
+		
+	}
+
+	
     // Returns the score of the given word if it is in the dictionary, zero otherwise.
     // (You can assume the word contains only the uppercase letters A through Z.)
     public int scoreOf(String word){
