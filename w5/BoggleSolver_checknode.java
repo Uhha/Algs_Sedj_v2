@@ -46,6 +46,7 @@ public class BoggleSolver_checknode
 			int i0 = x/adj[0].length;
 			int j0 = x-(adj[0].length*i0);
 			char ch = board.getLetter(i0, j0);
+			
 			if ("Q".equals(Character.toString(ch))){
 				sb.append("U");
 				sb.append(ch);
@@ -57,9 +58,14 @@ public class BoggleSolver_checknode
 		
 		boolean pass = false;
     	if(checknode == null){
-    		checknode = dic.keysWithPrefix5(sb.toString());
+    		checknode = dic.keysWithPrefix5(sbrev);
     	} else {
+    		if (Character.toString(board.getLetter(i, j)).equals("Q")){
+    			checknode = dic.keysWithPrefix5_support(checknode, Character.toString(board.getLetter(i, j))+"U");
+        		
+    		} else {
     		checknode = dic.keysWithPrefix5_support(checknode, Character.toString(board.getLetter(i, j)));
+    		}
     	}
     	
     	if(checknode != null){
@@ -121,7 +127,7 @@ public class BoggleSolver_checknode
         In in = new In("dictionary-algs4.txt");
         String[] dictionary = in.readAllStrings();
         BoggleSolver_checknode solver = new BoggleSolver_checknode(dictionary);
-        BoggleBoard board = new BoggleBoard("board4x4.txt");
+        BoggleBoard board = new BoggleBoard("board-q.txt");
         int score = 0;
         int cnt = 0;
         for (String word : solver.getAllValidWords(board))

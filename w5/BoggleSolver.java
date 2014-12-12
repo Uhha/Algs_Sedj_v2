@@ -2,8 +2,7 @@
 
 
 
-public class BoggleSolver
-{
+public class BoggleSolver{
 	private Trie_mod<Integer> dic;
 	
     // Initializes the data structure using the given array of strings as the dictionary.
@@ -31,13 +30,13 @@ public class BoggleSolver
     	boolean[][] bol = new boolean[board.rows()][board.cols()];
     	for (int i = 0; i < adj.length; i++) {
 			for (int j = 0; j < adj[0].length; j++) {
-				dfs(i, j, adj, bol, new Stack<Integer>(), board, words);
+				dfs(i, j, adj, bol, new Stack<Integer>(), board, words, null);
 			}
 		}
     	return words;
 	}
     
-    private void dfs(int i, int j, int[][]adj, boolean[][] bol, Stack<Integer> stack, BoggleBoard board, SET<String> words) {
+    private void dfs(int i, int j, int[][]adj, boolean[][] bol, Stack<Integer> stack, BoggleBoard board, SET<String> words, Trie_mod.Node checknode) {
 		stack.push(adj[i][j]);
 		bol[i][j] = true;
 		StringBuffer sb = new StringBuffer();
@@ -46,6 +45,7 @@ public class BoggleSolver
 			int i0 = x/adj[0].length;
 			int j0 = x-(adj[0].length*i0);
 			char ch = board.getLetter(i0, j0);
+			
 			if ("Q".equals(Character.toString(ch))){
 				sb.append("U");
 				sb.append(ch);
@@ -55,18 +55,31 @@ public class BoggleSolver
 		}
 		String sbrev = sb.reverse().toString();
 		
-		
-		
-		if(dic.keysWithPrefix2(sbrev)){
+		boolean pass = false;
+    	if(checknode == null){
+    		checknode = dic.keysWithPrefix5(sbrev);
+    	} else {
+    		if (Character.toString(board.getLetter(i, j)).equals("Q")){
+    			checknode = dic.keysWithPrefix5_support(checknode, Character.toString(board.getLetter(i, j))+"U");
+        		
+    		} else {
+    		checknode = dic.keysWithPrefix5_support(checknode, Character.toString(board.getLetter(i, j)));
+    		}
+    	}
+    	
+    	if(checknode != null){
+    		pass = true;
+    	}
+    	if (pass){
 			
-		if(j < adj[0].length-1 && !(bol[i][j+1])) {dfs(i, j+1, adj, bol, stack, board, words);}
-		if(j > 0 && !(bol[i][j-1])) {dfs(i, j-1, adj, bol, stack, board, words);}
-		if(i < adj.length-1 && !(bol[i+1][j])) {dfs(i+1, j, adj, bol, stack, board, words);}
-		if(i > 0 && !(bol[i-1][j])) {dfs(i-1, j, adj, bol, stack, board, words);}
-		if(i < adj.length-1 && j < adj[0].length-1 && !(bol[i+1][j+1])) {dfs(i+1, j+1, adj, bol, stack, board, words);}
-		if(i > 0 && j > 0 && !(bol[i-1][j-1])) {dfs(i-1, j-1, adj, bol, stack, board, words);}
-		if(i < adj.length-1 && j > 0 && !(bol[i+1][j-1])) {dfs(i+1, j-1, adj, bol, stack, board, words);}
-		if(i > 0 && j < adj[0].length-1 && !(bol[i-1][j+1])) {dfs(i-1, j+1, adj, bol, stack, board, words);}
+		if(j < adj[0].length-1 && !(bol[i][j+1])) {dfs(i, j+1, adj, bol, stack, board, words, checknode);}
+		if(j > 0 && !(bol[i][j-1])) {dfs(i, j-1, adj, bol, stack, board, words, checknode);}
+		if(i < adj.length-1 && !(bol[i+1][j])) {dfs(i+1, j, adj, bol, stack, board, words, checknode);}
+		if(i > 0 && !(bol[i-1][j])) {dfs(i-1, j, adj, bol, stack, board, words, checknode);}
+		if(i < adj.length-1 && j < adj[0].length-1 && !(bol[i+1][j+1])) {dfs(i+1, j+1, adj, bol, stack, board, words, checknode);}
+		if(i > 0 && j > 0 && !(bol[i-1][j-1])) {dfs(i-1, j-1, adj, bol, stack, board, words, checknode);}
+		if(i < adj.length-1 && j > 0 && !(bol[i+1][j-1])) {dfs(i+1, j-1, adj, bol, stack, board, words, checknode);}
+		if(i > 0 && j < adj[0].length-1 && !(bol[i-1][j+1])) {dfs(i-1, j+1, adj, bol, stack, board, words, checknode);}
 		
 		}
 		
@@ -113,7 +126,7 @@ public class BoggleSolver
         In in = new In("dictionary-algs4.txt");
         String[] dictionary = in.readAllStrings();
         BoggleSolver solver = new BoggleSolver(dictionary);
-        BoggleBoard board = new BoggleBoard("board4x4.txt");
+        BoggleBoard board = new BoggleBoard("board-q.txt");
         int score = 0;
         int cnt = 0;
         for (String word : solver.getAllValidWords(board))
