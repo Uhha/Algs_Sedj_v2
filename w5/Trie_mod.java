@@ -94,7 +94,17 @@ public class Trie_mod<Value> {
         else {return x;}
     }
     
-    
+    public boolean keysWithPrefix6(String prefix) {
+    	Node x = get6(root, prefix, 0);
+    	if (x == null) return false;
+        else {return true;}
+    }
+    private Node get6(Node x, String key, int d) {
+        if (x == null) return null;
+        if (d == key.length()) return x;
+        char c = key.charAt(d);
+        return get6(x.next[c-65], key, d+1);
+    }
 
     // test client
     public static void main(String[] args) {
