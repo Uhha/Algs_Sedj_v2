@@ -30,13 +30,13 @@ public class BoggleSolver{
     	boolean[][] bol = new boolean[board.rows()][board.cols()];
     	for (int i = 0; i < adj.length; i++) {
 			for (int j = 0; j < adj[0].length; j++) {
-				dfs(i, j, bol, new Stack<Character>(), board, words, null);
+				dfs(i, j, bol, new Stack<Character>(), board, words);
 			}
 		}
     	return words;
 	}
     
-    private void dfs(int i, int j, boolean[][] bol, Stack<Character> stack2, BoggleBoard board, SET<String> words, Trie_mod.Node checknode) {
+    private void dfs(int i, int j, boolean[][] bol, Stack<Character> stack2, BoggleBoard board, SET<String> words) {
 		stack2.push(board.getLetter(i, j));
 		bol[i][j] = true;
 		
@@ -74,19 +74,21 @@ public class BoggleSolver{
 //    		pass = true;
 //    	}
 //    	if (pass){
+		boolean wasin = false;
 		if (dic.keysWithPrefix2(prefix)){
-		if(j < bol[0].length-1 && !(bol[i][j+1])) {dfs(i, j+1, bol, stack2, board, words, checknode);}
-		if(j > 0 && !(bol[i][j-1])) {dfs(i, j-1, bol, stack2, board, words, checknode);}
-		if(i < bol.length-1 && !(bol[i+1][j])) {dfs(i+1, j, bol, stack2, board, words, checknode);}
-		if(i > 0 && !(bol[i-1][j])) {dfs(i-1, j, bol, stack2, board, words, checknode);}
-		if(i < bol.length-1 && j < bol[0].length-1 && !(bol[i+1][j+1])) {dfs(i+1, j+1, bol, stack2, board, words, checknode);}
-		if(i > 0 && j > 0 && !(bol[i-1][j-1])) {dfs(i-1, j-1, bol, stack2, board, words, checknode);}
-		if(i < bol.length-1 && j > 0 && !(bol[i+1][j-1])) {dfs(i+1, j-1, bol, stack2, board, words, checknode);}
-		if(i > 0 && j < bol[0].length-1 && !(bol[i-1][j+1])) {dfs(i-1, j+1, bol, stack2, board, words, checknode);}
+			wasin = true;
+		if(j < bol[0].length-1 && !(bol[i][j+1])) {dfs(i, j+1, bol, stack2, board, words);}
+		if(j > 0 && !(bol[i][j-1])) {dfs(i, j-1, bol, stack2, board, words);}
+		if(i < bol.length-1 && !(bol[i+1][j])) {dfs(i+1, j, bol, stack2, board, words);}
+		if(i > 0 && !(bol[i-1][j])) {dfs(i-1, j, bol, stack2, board, words);}
+		if(i < bol.length-1 && j < bol[0].length-1 && !(bol[i+1][j+1])) {dfs(i+1, j+1, bol, stack2, board, words);}
+		if(i > 0 && j > 0 && !(bol[i-1][j-1])) {dfs(i-1, j-1, bol, stack2, board, words);}
+		if(i < bol.length-1 && j > 0 && !(bol[i+1][j-1])) {dfs(i+1, j-1, bol, stack2, board, words);}
+		if(i > 0 && j < bol[0].length-1 && !(bol[i-1][j+1])) {dfs(i-1, j+1, bol, stack2, board, words);}
 		
 		}
 		
-		if (dic.contains(prefix) && prefix.length() > 2) {words.add(prefix);}
+		if (dic.contains(prefix) && prefix.length() > 2 && wasin == true) {words.add(prefix);}
 		
 		stack2.pop();
 		bol[i][j] = false;

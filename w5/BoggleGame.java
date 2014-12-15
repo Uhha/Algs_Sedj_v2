@@ -976,8 +976,10 @@ public class BoggleGame extends JFrame {
                 }
                 else if (args.length == 2) {
                     try {
-                        rows = Integer.parseInt(args[0]);
-                        cols  = Integer.parseInt(args[1]);
+                        //rows = Integer.parseInt(args[0]);
+                        //cols  = Integer.parseInt(args[1]);
+                    	rows = Integer.parseInt("4");
+                        cols  = Integer.parseInt("4");
                     } catch (NumberFormatException e) {
                         System.err.println("Usage: java BoggleGame " +
                                            "\nor:    java BoggleGame [rows]" +
