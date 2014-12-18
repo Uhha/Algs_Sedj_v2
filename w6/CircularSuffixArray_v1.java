@@ -3,50 +3,50 @@ import java.util.Arrays;
 
 
 
-public class CircularSuffixArray {
+public class CircularSuffixArray_v1 {
 	
-	private static final int CUTOFF =  15;   // cutoff to insertion sort
 	private String data;
 	private int[] suffixes;
 	
 	// circular suffix array of s
-    public CircularSuffixArray(String s){
+    public CircularSuffixArray_v1(String s){
     	if (s.equals(null)) throw new NullPointerException();
     	data = s;
     	suffixes = new int[s.length()];
-    	for (int i = 0; i < s.length(); i++) {
-			suffixes[i] = i;
+    	String[] strar = new String[s.length()];
+    	String doubleStr = s+s;
+    	char[] cha = doubleStr.toCharArray();
+    	for (int i = 0; i < strar.length; i++) {
+    		strar[i] = String.copyValueOf(Arrays.copyOfRange(cha, i, i+s.length()));
 		}
-        
     	
-    	Quick3way_mod.sort(s, suffixes);
-    	//sort(s, s.length());
-    	//printer(strar);
-    	//System.out.println(Arrays.toString(suffixes));
+    	//printer
+    	//for (int i = 0; i < strar.length; i++) {
+		//	System.out.println(strar[i]);
+		//}
+    	
+    	sort(strar, s.length());
+    	printer(strar);
+    	
     	
     }
     
-    private void sort(String a, int W) {
-    	String doubleA = a+a;
-        int N = a.length();
+    private void sort(String[] a, int W) {
+        int N = a.length;
         int R = 256;   // extend ASCII alphabet size
+        String[] aux = new String[N];
         
         int[] auxint = new int[N];
-        
         for (int i = 0; i < auxint.length; i++) {
 			suffixes[i] = i;
 		}
-        
-        for (int d = 0; d < N; d++) {
+        for (int d = W-1; d >= 0; d--) {
             // sort by key-indexed counting on dth character
 
             // compute frequency counts
             int[] count = new int[R+1];
-           
-            for (int i = 0; i < N; i++){
-                count[doubleA.charAt((N-(d+1))+suffixes[i]) + 1]++;
-            	
-            }
+            for (int i = 0; i < N; i++)
+                count[a[i].charAt(d) + 1]++;
 
             // compute cumulates
             for (int r = 0; r < R; r++)
@@ -54,20 +54,16 @@ public class CircularSuffixArray {
 
             // move data
             for (int i = 0; i < N; i++){
-            	//System.out.println(N);
-            	//System.out.println(suffixes[i]);
-                int num = count[doubleA.charAt((N-(d+1))+suffixes[i])]++;
-            	//aux[num] = a[i];
+                int num = count[a[i].charAt(d)]++;
+            	aux[num] = a[i];
             	auxint[num] = suffixes[i];
             }
 
             // copy back
             for (int i = 0; i < N; i++){
-                //a[i] = aux[i];
+                a[i] = aux[i];
             	suffixes[i] = auxint[i];
-            	
             }
-            //System.out.println(Arrays.toString(suffixes));
         }
         
     }
@@ -91,8 +87,7 @@ public class CircularSuffixArray {
     }
     // unit testing of the methods (optional)
     public static void main(String[] args){
-    	CircularSuffixArray csa = new CircularSuffixArray("ABRACADABRA!");
-    	//CircularSuffixArray csa = new CircularSuffixArray("BACD");
+    	CircularSuffixArray_v1 csa = new CircularSuffixArray_v1("ABRACADABRA!");
     	
     }
 }

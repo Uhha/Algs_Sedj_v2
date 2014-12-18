@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 
 public class BurrowsWheeler {
     // apply Burrows-Wheeler encoding, reading from standard input and writing to standard output
@@ -13,6 +15,6 @@ public class BurrowsWheeler {
     // if args[0] is '-', apply Burrows-Wheeler encoding
     // if args[0] is '+', apply Burrows-Wheeler decoding
     public static void main(String[] args){
-    	
+    	System.out.println(2%3);
     }
 }

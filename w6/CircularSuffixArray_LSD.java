@@ -3,24 +3,17 @@ import java.util.Arrays;
 
 
 
-public class CircularSuffixArray {
+public class CircularSuffixArray_LSD {
 	
-	private static final int CUTOFF =  15;   // cutoff to insertion sort
 	private String data;
 	private int[] suffixes;
 	
 	// circular suffix array of s
-    public CircularSuffixArray(String s){
+    public CircularSuffixArray_LSD(String s){
     	if (s.equals(null)) throw new NullPointerException();
     	data = s;
     	suffixes = new int[s.length()];
-    	for (int i = 0; i < s.length(); i++) {
-			suffixes[i] = i;
-		}
-        
-    	
-    	Quick3way_mod.sort(s, suffixes);
-    	//sort(s, s.length());
+    	sort(s, s.length());
     	//printer(strar);
     	//System.out.println(Arrays.toString(suffixes));
     	
@@ -91,7 +84,7 @@ public class CircularSuffixArray {
     }
     // unit testing of the methods (optional)
     public static void main(String[] args){
-    	CircularSuffixArray csa = new CircularSuffixArray("ABRACADABRA!");
+    	CircularSuffixArray_LSD csa = new CircularSuffixArray_LSD("ABRACADABRA!");
     	//CircularSuffixArray csa = new CircularSuffixArray("BACD");
     	
     }
