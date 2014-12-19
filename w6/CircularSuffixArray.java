@@ -5,10 +5,12 @@ import java.util.Arrays;
 
 public class CircularSuffixArray {
 	
-	private static final int CUTOFF =  15;   // cutoff to insertion sort
 	private String data;
 	private int[] suffixes;
 	
+	private static final int R      = 256;   // extended ASCII alphabet size
+    private static final int CUTOFF =  0;   // cutoff to insertion sort
+    
 	// circular suffix array of s
     public CircularSuffixArray(String s){
     	if (s.equals(null)) throw new NullPointerException();
@@ -19,80 +21,113 @@ public class CircularSuffixArray {
 		}
         
     	
-    	Quick3way_mod.sort(s, suffixes);
+    	sort();
     	//sort(s, s.length());
     	//printer(strar);
     	//System.out.println(Arrays.toString(suffixes));
     	
     }
     
-    private void sort(String a, int W) {
-    	String doubleA = a+a;
-        int N = a.length();
-        int R = 256;   // extend ASCII alphabet size
-        
-        int[] auxint = new int[N];
-        
-        for (int i = 0; i < auxint.length; i++) {
-			suffixes[i] = i;
-		}
-        
-        for (int d = 0; d < N; d++) {
-            // sort by key-indexed counting on dth character
+    public void sort() {
+        int N = length();
+        int[] aux = new int[N];
+        sort(0, N-1, 0, aux);
+    }
 
-            // compute frequency counts
-            int[] count = new int[R+1];
-           
-            for (int i = 0; i < N; i++){
-                count[doubleA.charAt((N-(d+1))+suffixes[i]) + 1]++;
-            	
-            }
-
-            // compute cumulates
-            for (int r = 0; r < R; r++)
-                count[r+1] += count[r];
-
-            // move data
-            for (int i = 0; i < N; i++){
-            	//System.out.println(N);
-            	//System.out.println(suffixes[i]);
-                int num = count[doubleA.charAt((N-(d+1))+suffixes[i])]++;
-            	//aux[num] = a[i];
-            	auxint[num] = suffixes[i];
-            }
-
-            // copy back
-            for (int i = 0; i < N; i++){
-                //a[i] = aux[i];
-            	suffixes[i] = auxint[i];
-            	
-            }
-            //System.out.println(Arrays.toString(suffixes));
-        }
+    // return dth character of s, -1 if d = length of string
+    private int charAt(int stringNum, int d) {
+        //assert d >= 0 && d <= s.length();
+        if (d == length()) return -1;
+        String dubS = data+data;
+        //return dubS.charAt(length() + suffixes[stringNum] + d);
+        return dubS.charAt(stringNum+d);
         
     }
-    // length of s
-    public int length(){
-		return data.length();
+
+    // sort from a[lo] to a[hi], starting at the dth character
+    private void sort(int lo, int hi, int d, int[] aux) {
+
+        // cutoff to insertion sort for small subarrays
+        if (hi <= lo + CUTOFF) {
+            insertion(lo, hi, d);
+            return;
+        }
+
+        // compute frequency counts
+        int[] count = new int[R+2];
+        for (int i = lo; i <= hi; i++) {
+            int c = charAt(suffixes[i], d);
+            count[c+2]++;
+        }
+
+        // transform counts to indicies
+        for (int r = 0; r < R+1; r++)
+            count[r+1] += count[r];
+
+        // distribute
+        for (int i = lo; i <= hi; i++) {
+            int c = charAt(suffixes[i], d);
+            aux[count[c+1]++] = suffixes[i];
+        }
+
+        // copy back
+        for (int i = lo; i <= hi; i++) 
+        	suffixes[i] = aux[i - lo];
+
+
+        // recursively sort for each character
+        for (int r = 0; r < R; r++)
+            sort(lo + count[r], lo + count[r+1] - 1, d+1, aux);
+    }
+
+
+    // return dth character of s, -1 if d = length of string
+    private void insertion(int lo, int hi, int d) {
+        for (int i = lo; i <= hi; i++)
+            for (int j = i; j > lo && less(suffixes[j], suffixes[j-1], d); j--)
+                exch(j, j-1);
+    }
+
+    // exchange a[i] and a[j]
+    private void exch(int i, int j) {
+        int temp = suffixes[i];
+        suffixes[i] = suffixes[j];
+        suffixes[j] = temp;
+    }
+
+    // is v less than w, starting at character d
+    private boolean less(int v, int w, int d) {
+        //assert v.substring(0, d).equals(w.substring(0, d));
+        //return v.substring(d).compareTo(w.substring(d)) < 0;
+    	String dubS = data+data;
     	
-    }                  
+        for (int i = d; i < Math.min(suffixes.length, suffixes.length); i++) {
+            if (dubS.charAt(length()- suffixes[v] + i) < dubS.charAt(length()- suffixes[w] + i)) return true;
+            if (dubS.charAt(length()- suffixes[v] + i) > dubS.charAt(length()- suffixes[w] + i)) return false;
+        }
+        //return v.length() < w.length();
+        System.out.println("FAILED");
+        return true;
+    }
+             
+    
+    
     // returns index of ith sorted suffix
     public int index(int i){
 		if (i < 0 || i > data.length()-1) throw new IndexOutOfBoundsException();
 		return suffixes[i];
     	
     }      
+    public int length(){
+		return data.length();
+    	
+    }  
     
-    private void printer(String[] strar){
-    	for (int i = 0; i < strar.length; i++) {
-			System.out.println(strar[i]);
-		}
-    	StdOut.print(Arrays.toString(suffixes));
-    }
     // unit testing of the methods (optional)
     public static void main(String[] args){
+    	
     	CircularSuffixArray csa = new CircularSuffixArray("ABRACADABRA!");
     	//CircularSuffixArray csa = new CircularSuffixArray("BACD");
-    	
+    	System.out.println(Arrays.toString(csa.suffixes));
     }
 }
