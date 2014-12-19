@@ -1,6 +1,6 @@
 
 public class Quick3way_mod {
-    private static final int CUTOFF =  15;   // cutoff to insertion sort
+    private static final int CUTOFF =  0;   // cutoff to insertion sort
 
     // sort the array a[] of strings
     public static void sort(String a, int[] suffixes) {
@@ -14,7 +14,8 @@ public class Quick3way_mod {
         assert d >= 0 && d <= s.length();
         if (d == s.length()) return -1;
         String dubS = s+s;
-        return dubS.charAt(s.length()- suffixes[stringNum] + d);
+       // return dubS.charAt(s.length()- suffixes[stringNum] + d);
+        return dubS.charAt(stringNum + d);
     }
 
 
@@ -28,10 +29,10 @@ public class Quick3way_mod {
         }
 
         int lt = lo, gt = hi;
-        int v = charAt(a,lo, d, suffixes);
+        int v = charAt(a,suffixes[lo], d, suffixes);
         int i = lo + 1;
         while (i <= gt) {
-            int t = charAt(a,i, d, suffixes);
+            int t = charAt(a,suffixes[i], d, suffixes);
             if      (t < v) exch(a, lt++, i++, suffixes);
             else if (t > v) exch(a, i, gt--, suffixes);
             else              i++;
@@ -68,10 +69,9 @@ public class Quick3way_mod {
     private static boolean less(String s, int v, int w, int d, int[] suffixes) {
         //assert v.substring(0, d).equals(w.substring(0, d));
     	String dubS = s+s;
-    	
-        for (int i = d; i < Math.min(suffixes.length, suffixes.length); i++) {
-            if (dubS.charAt(s.length()- suffixes[v] + i) < dubS.charAt(s.length()- suffixes[w] + i)) return true;
-            if (dubS.charAt(s.length()- suffixes[v] + i) > dubS.charAt(s.length()- suffixes[w] + i)) return false;
+    	for (int i = d; i < Math.min(suffixes.length, suffixes.length); i++) {
+            if (dubS.charAt(v + i) < dubS.charAt(w + i)) return true;
+            if (dubS.charAt(v + i) > dubS.charAt(w + i)) return false;
         }
         //return v.length() < w.length();
         System.out.println("FAILED");

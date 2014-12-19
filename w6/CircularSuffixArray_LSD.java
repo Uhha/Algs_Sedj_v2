@@ -8,6 +8,10 @@ public class CircularSuffixArray_LSD {
 	private String data;
 	private int[] suffixes;
 	
+	public int[] getSuffixes() {
+		return suffixes;
+	}
+
 	// circular suffix array of s
     public CircularSuffixArray_LSD(String s){
     	if (s.equals(null)) throw new NullPointerException();
@@ -84,8 +88,8 @@ public class CircularSuffixArray_LSD {
     }
     // unit testing of the methods (optional)
     public static void main(String[] args){
-    	CircularSuffixArray_LSD csa = new CircularSuffixArray_LSD("ABRACADABRA!");
-    	//CircularSuffixArray csa = new CircularSuffixArray("BACD");
+    	CircularSuffixArray_LSD csa = new CircularSuffixArray_LSD("Itiswisetoturncircumstancestogoodaccount.");
+    	System.out.println(Arrays.toString(csa.suffixes));
     	
     }
 }

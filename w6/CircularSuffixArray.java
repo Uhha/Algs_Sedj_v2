@@ -8,109 +8,27 @@ public class CircularSuffixArray {
 	private String data;
 	private int[] suffixes;
 	
-	private static final int R      = 256;   // extended ASCII alphabet size
-    private static final int CUTOFF =  0;   // cutoff to insertion sort
-    
+	
+	public int[] getSuffixes() {
+		return suffixes;
+	}
+
+
 	// circular suffix array of s
     public CircularSuffixArray(String s){
     	if (s.equals(null)) throw new NullPointerException();
     	data = s;
-    	suffixes = new int[s.length()];
-    	for (int i = 0; i < s.length(); i++) {
-			suffixes[i] = i;
-		}
-        
     	
-    	sort();
+    	SuffixArrayX_mod sf = new SuffixArrayX_mod(data);
+    	suffixes = sf.getIndex();
+    	
+    	
     	//sort(s, s.length());
     	//printer(strar);
     	//System.out.println(Arrays.toString(suffixes));
     	
     }
-    
-    public void sort() {
-        int N = length();
-        int[] aux = new int[N];
-        sort(0, N-1, 0, aux);
-    }
-
-    // return dth character of s, -1 if d = length of string
-    private int charAt(int stringNum, int d) {
-        //assert d >= 0 && d <= s.length();
-        if (d == length()) return -1;
-        String dubS = data+data;
-        //return dubS.charAt(length() + suffixes[stringNum] + d);
-        return dubS.charAt(stringNum+d);
-        
-    }
-
-    // sort from a[lo] to a[hi], starting at the dth character
-    private void sort(int lo, int hi, int d, int[] aux) {
-
-        // cutoff to insertion sort for small subarrays
-        if (hi <= lo + CUTOFF) {
-            insertion(lo, hi, d);
-            return;
-        }
-
-        // compute frequency counts
-        int[] count = new int[R+2];
-        for (int i = lo; i <= hi; i++) {
-            int c = charAt(suffixes[i], d);
-            count[c+2]++;
-        }
-
-        // transform counts to indicies
-        for (int r = 0; r < R+1; r++)
-            count[r+1] += count[r];
-
-        // distribute
-        for (int i = lo; i <= hi; i++) {
-            int c = charAt(suffixes[i], d);
-            aux[count[c+1]++] = suffixes[i];
-        }
-
-        // copy back
-        for (int i = lo; i <= hi; i++) 
-        	suffixes[i] = aux[i - lo];
-
-
-        // recursively sort for each character
-        for (int r = 0; r < R; r++)
-            sort(lo + count[r], lo + count[r+1] - 1, d+1, aux);
-    }
-
-
-    // return dth character of s, -1 if d = length of string
-    private void insertion(int lo, int hi, int d) {
-        for (int i = lo; i <= hi; i++)
-            for (int j = i; j > lo && less(suffixes[j], suffixes[j-1], d); j--)
-                exch(j, j-1);
-    }
-
-    // exchange a[i] and a[j]
-    private void exch(int i, int j) {
-        int temp = suffixes[i];
-        suffixes[i] = suffixes[j];
-        suffixes[j] = temp;
-    }
-
-    // is v less than w, starting at character d
-    private boolean less(int v, int w, int d) {
-        //assert v.substring(0, d).equals(w.substring(0, d));
-        //return v.substring(d).compareTo(w.substring(d)) < 0;
-    	String dubS = data+data;
-    	
-        for (int i = d; i < Math.min(suffixes.length, suffixes.length); i++) {
-            if (dubS.charAt(length()- suffixes[v] + i) < dubS.charAt(length()- suffixes[w] + i)) return true;
-            if (dubS.charAt(length()- suffixes[v] + i) > dubS.charAt(length()- suffixes[w] + i)) return false;
-        }
-        //return v.length() < w.length();
-        System.out.println("FAILED");
-        return true;
-    }
-             
-    
+  
     
     // returns index of ith sorted suffix
     public int index(int i){
@@ -125,9 +43,26 @@ public class CircularSuffixArray {
     
     // unit testing of the methods (optional)
     public static void main(String[] args){
+    	//String s = "layviolenthandsonhim,buttofindsomepleatojustifytothe";
+    	String s = "lhah";
     	
-    	CircularSuffixArray csa = new CircularSuffixArray("ABRACADABRA!");
-    	//CircularSuffixArray csa = new CircularSuffixArray("BACD");
-    	System.out.println(Arrays.toString(csa.suffixes));
+    	CircularSuffixArray csa = new CircularSuffixArray(s);
+    	CircularSuffixArray_3way csa3way = new CircularSuffixArray_3way(s);
+    	CircularSuffixArray_LSD csaLSD = new CircularSuffixArray_LSD(s);
+    	int[] res1 = csa.suffixes;
+    	int[] res2 = csaLSD.getSuffixes();
+    	int[] res3 = csa3way.getSuffixes();
+    	System.out.println(Arrays.toString(csa.suffixes) + " Suffix X");
+    	System.out.println(Arrays.toString(csaLSD.getSuffixes()) + " MSD Right One");
+    	
+    	for (int i = 0; i < res1.length; i++) {
+			if(res1[i] != res2[i]){
+				System.out.println("COMp - FAILED");
+				break;
+			}
+		}
+    	
+    	System.out.println(Arrays.toString(csa3way.getSuffixes()) + " 3way");
+    	
     }
 }
