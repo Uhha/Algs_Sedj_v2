@@ -51,7 +51,7 @@ public class CircularSuffixArray_3way {
     }
     // unit testing of the methods (optional)
     public static void main(String[] args){
-    	CircularSuffixArray_3way csa = new CircularSuffixArray_3way("lhah");
+    	CircularSuffixArray_3way csa = new CircularSuffixArray_3way("causcaus");
     	//CircularSuffixArray csa = new CircularSuffixArray("BACD");
     	System.out.println(Arrays.toString(csa.suffixes));
     }

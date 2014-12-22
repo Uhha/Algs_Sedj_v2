@@ -11,11 +11,13 @@ public class Quick3way_mod {
 
     // return the dth character of s, -1 if d = length of s
     private static int charAt(String s, int stringNum, int d, int[] suffixes) { 
-        assert d >= 0 && d <= s.length();
+        //assert d >= 0 && d <= s.length();
         if (d == s.length()) return -1;
-        String dubS = s+s;
+        //String dubS = s+s;
+        int x = stringNum + d;
+        x = x%s.length();
        // return dubS.charAt(s.length()- suffixes[stringNum] + d);
-        return dubS.charAt(stringNum + d);
+        return s.charAt(x);
     }
 
 

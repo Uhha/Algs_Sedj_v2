@@ -67,7 +67,7 @@ public class SuffixArrayX_mod {
     public SuffixArrayX_mod(String text) {
         N = text.length();
         //text = text + '\0';
-        text = text + "";
+        //text = text + "*";
         
         this.text = text.toCharArray();
         this.index = new int[N];
@@ -89,15 +89,16 @@ public class SuffixArrayX_mod {
         }
 
         int lt = lo, gt = hi;
-        char v = text[index[lo] + d];
+        int v = text[(index[lo] + d)%N];     // char >> int
         int i = lo + 1;
         while (i <= gt) {
-            int t = text[index[i] + d];
+            int t = text[(index[i] + d)%N];
             if      (t < v) exch(lt++, i++);
             else if (t > v) exch(i, gt--);
             else            i++;
         }
-
+        
+        if(d == N) {v = -1;}
         // a[lo..lt-1] < v = a[lt..gt] < a[gt+1..hi]. 
         sort(lo, lt-1, d);
         if (v >= 0) sort(lt, gt, d+1);  // !!!added "="
@@ -124,7 +125,7 @@ public class SuffixArrayX_mod {
         }
         //return v.length() < w.length();
         System.out.println("FAILED");
-        return true;
+        return index[v]>index[w];
     }
     
     private boolean less2(int i, int j, int d) {

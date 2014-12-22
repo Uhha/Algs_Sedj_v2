@@ -36,8 +36,8 @@ public class CircularSuffixArrayTest {
 	@Test
 	public void test() {
 		for (int i = 0; i < length; i++) {
-			//CircularSuffixArray cs = new CircularSuffixArray(set[i]);
-			CircularSuffixArray_3way cs = new CircularSuffixArray_3way(set[i]);
+			CircularSuffixArray cs = new CircularSuffixArray(set[i]);
+			//CircularSuffixArray_3way cs = new CircularSuffixArray_3way(set[i]);
 			//CircularSuffixArray_MSD cs = new CircularSuffixArray_MSD(set[i]);
 			CircularSuffixArray_LSD csLSD = new CircularSuffixArray_LSD(set[i]);
 			
