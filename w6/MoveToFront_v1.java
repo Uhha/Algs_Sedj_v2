@@ -1,5 +1,5 @@
 
-public class MoveToFront {
+public class MoveToFront_v1 {
     // apply move-to-front encoding, reading from standard input and writing to standard output
     public static void encode(){
     	int[] R = new int[256];
@@ -25,24 +25,31 @@ public class MoveToFront {
     	for (int i = 0; i < R.length; i++) {
 			R[i] = i;
 		}
-    	while (!BinaryStdIn.isEmpty()){
-    		int ch = BinaryStdIn.readChar();
+    	int[] s = new int[]{41, 42, 52, 02, 44, 01, 45, 01, 04, 04, 02, 26};
+    	int cnt = 0;
+    	
+    	while (cnt < 12){
+    		int ch = s[cnt];
     		int tempstore = R[ch];
     		char x = (char) R[ch];
-    		BinaryStdOut.write(x);
+    		System.out.print(R[ch] + " ");;
     		for (int i = ch ; i > 0; i--) {
     			R[i] = R[i-1];
     		}
     		R[0] = tempstore;
+    		cnt++;
     	}
+    	//correct one 41 42 52 41 43 41 44 41 42 52 41 21 
+    				//41 42 52 41 43 41 44 41 42 52 41 21  
     	BinaryStdOut.flush();
     }
 
     // if args[0] is '-', apply move-to-front encoding
     // if args[0] is '+', apply move-to-front decoding
     public static void main(String[] args){
-    	if      (args[0].equals("-")) encode();
-        else if (args[0].equals("+")) decode();
-        else throw new IllegalArgumentException("Illegal command line argument");
+    	decode();
+    	//if      (args[0].equals("-")) encode();
+        //else if (args[0].equals("+")) decode();
+        //else throw new IllegalArgumentException("Illegal command line argument");
     }
 }
